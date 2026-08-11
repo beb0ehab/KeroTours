@@ -1,0 +1,4 @@
+.logo{display:flex;align-items:center;text-decoration:none}
+.logo img{display:block;width:120px;height:auto}
+.footer-logo img{filter:brightness(0) invert(1);opacity:.88}
+@media(max-width:650px){.logo img{width:100px}}

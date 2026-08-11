@@ -1,0 +1,13 @@
+
+.env.local
+node_modules
+dist
+tmp
+*.fig
+*.zip
+*-preview.png
+figma-public.png
+.claude
+.fig-assets
+.fig-inspect
+fig-export
