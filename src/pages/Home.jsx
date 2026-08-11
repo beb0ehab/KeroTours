@@ -170,14 +170,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="plain sea-trips-z">
+      <section className="plain">
         <div className="wrap">
           <div className="trips-head">
             <Head left eyebrow="Most Popular" title="Top Sea Trips" />
             <a className="all-trips" href="#/trips">{t("All trips")} <ArrowRight size={16} /></a>
           </div>
           <div className="trip-grid">
-            {TRIPS.sea.slice(0, 3).map((t, i) => <TripCard key={t.name} t={t} theme={['sand', 'navy', 'teal'][i]} />)}
+            {TRIPS.sea.slice(0, 3).map((t, i) => <TripCard key={t.name} t={t} theme={i % 2 === 0 ? 'sand' : 'navy'} />)}
           </div>
         </div>
       </section>
