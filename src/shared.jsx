@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Check, MessageCircle, Clock, ChevronDown, Globe, Menu, X, Mail, MapPin, Send, Camera, Music } from 'lucide-react';
+import { ArrowRight, Check, Star, MessageCircle, Clock, ChevronDown, Globe, Menu, X, Mail, MapPin, Send, Camera, Music } from 'lucide-react';
 import { useT, useLang, LANGUAGES } from './i18n/index.jsx';
 
 const BASE = import.meta.env.BASE_URL;
@@ -193,6 +193,7 @@ export function Floats({ ask }) {
 export function TripCard({ t: trip, theme }) {
   const t = useT();
   const [open, setOpen] = React.useState(false);
+  const optionsId = React.useId();
   return (
     <article className={'trip ' + theme}>
       <div className="pic">
@@ -204,10 +205,39 @@ export function TripCard({ t: trip, theme }) {
         <div className="price"><b>{t(trip.price)}</b><span>{t(trip.unit)}</span></div>
         <div className="meta"><Clock size={13} />{t(trip.duration)}</div>
         {trip.options && (
-          <button className="meta opts" onClick={() => setOpen(!open)}>
-            <ChevronDown size={14} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: '.2s' }} />
+          <button type="button" className={'meta opts' + (open ? ' open' : '')}
+            onClick={() => setOpen(!open)} aria-expanded={open} aria-controls={optionsId}>
+            <ChevronDown size={14} />
             {t('Pricing options')}
           </button>
+        )}
+        {trip.options && open && (
+          <div className="price-options" id={optionsId} role="region" aria-label={t('Pricing options')}>
+            {Array.isArray(trip.options) ? (
+              <div className="price-options-list">
+                {trip.optionsCommon && <div className="options-common"><b>{t('Included in every package')}</b><ul>{trip.optionsCommon.map(item => <li key={item}><Check size={12} />{t(item)}</li>)}</ul></div>}
+                {trip.options.map((option, index) => (
+                  <article key={option.name}>
+                    <span className="option-number">0{index + 1}</span>
+                    <div className="option-copy">
+                      <b>{t(option.name)}</b>
+                      <span className="price-options-time"><Clock size={12} /> {t(option.duration)}</span>
+                      {option.highlight && <span className="option-highlight"><Star size={12} />{t(option.highlight)}</span>}
+                    </div>
+                    <strong className="option-price">{option.price}</strong>
+                  </article>
+                ))}
+                <p className="options-note">{t(trip.optionsNote)}</p>
+                <Btn tone={theme === 'sand' ? 'navy' : 'sand'} block>{t('Book on WhatsApp')}</Btn>
+              </div>
+            ) : (
+              <>
+                <div className="price-options-main"><b>{t(trip.price)}</b><span>{t(trip.unit)}</span></div>
+                <div className="price-options-time"><Clock size={13} /> {t(trip.duration)}</div>
+                <Btn tone={theme === 'sand' ? 'navy' : 'sand'} block>{t('Book on WhatsApp')}</Btn>
+              </>
+            )}
+          </div>
         )}
         <ul>{trip.items.map(i => <li key={i}><Check size={13} />{t(i)}</li>)}</ul>
         <p className="note">{t(trip.note)}{trip.note2 && <><br />{t(trip.note2)}</>}</p>

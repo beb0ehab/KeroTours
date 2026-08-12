@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Check, Waves, Mountain, Building2, Plane, Tag, Languages, BadgeCheck, MessageCircle, Car, BadgeEuro, Star } from 'lucide-react';
+import { ArrowRight, Check, Waves, Mountain, Building2, Plane, Tag, Languages, BadgeCheck, MessageCircle, Car, BadgeEuro, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { P, Btn, Head, Flag, TripCard, SPOKEN } from '../shared.jsx';
 import { useT } from '../i18n/index.jsx';
 import { TRIPS } from '../trips.js';
@@ -12,9 +12,10 @@ const STATS = [
 ];
 
 const HERO_THUMBS = [
-  ['Sea', 'cat-sea.jpg', 'sand'],
-  ['Desert Adventures', 'cat-desert.jpg', 'navy'],
-  ['Entertainment', 'cat-entertain.jpg', 'sand']
+  ['Sea', 'cat-sea.jpg', 'sand', 'sea'],
+  ['Desert Adventures', 'cat-desert.jpg', 'navy', 'desert'],
+  ['Entertainment', 'cat-entertain.jpg', 'sand', 'entertainment'],
+  ['Historical Trips', 'cat-history.jpg', 'navy', 'historical']
 ];
 
 const PACKAGES = [
@@ -22,18 +23,21 @@ const PACKAGES = [
     theme: 'sand', tag: 'Private Package', photo: 'pkg-zero-stress.jpg',
     name: 'Zero Stress', price: '€55', unit: 'Up to 5 individuals',
     lede: 'Private welcome for up to 5 — airport to city in complete comfort.',
+    featured: [0, 1, 2],
     items: ['Airport pickup from Hurghada', '2 SIM cards with 20 GB each', 'Private Hurghada city tour', 'Private guide throughout', 'Shopping stop at trip end']
   },
   {
     theme: 'navy', tag: 'Sea + City Bundle', photo: 'pkg-fun.jpg',
     name: 'Fun & Relaxation', price: '€175', unit: 'Up to 5 individuals',
     lede: 'Private speedboat, dolphin watching, White Island, and a full city tour.',
+    featured: [0, 4],
     items: ['4-hr private speedboat (exclusive)', 'Snorkeling & dolphin watching', 'White Island visit', 'Fruits & drinks on board', 'Full Hurghada city tour', 'Private car transfers']
   },
   {
     theme: 'teal', tag: 'Adventure + Wellness', photo: 'pkg-desert.jpg',
     name: 'Desert & Relaxation', price: '€70', unit: 'Per individual',
     lede: 'Safari, horseback riding between sea and dunes, and a full spa session.',
+    featured: [0, 2, 3],
     items: ['Super Safari: Jeep, buggy, quad & camel', 'Bedouin village + dinner & show', '1hr sea + 1hr desert horse ride', '1hr full body massage', '1hr spa, sauna & Jacuzzi', 'Private car + guide throughout']
   }
 ];
@@ -89,11 +93,32 @@ function Package({ p }) {
         <h3>{t(p.name)}</h3>
         <p className="lede">{t(p.lede)}</p>
         <div className="price"><b>{p.price}</b><span>{t(p.unit)}</span></div>
-        <ul>{p.items.map(i => <li key={i}><Check size={14} />{t(i)}</li>)}</ul>
+        <ul>{p.items.map((item, index) => {
+          const featured = p.featured.includes(index);
+          const Icon = featured ? Star : Check;
+          return <li className={featured ? 'primary' : ''} key={item}><Icon size={featured ? 15 : 14} />{t(item)}</li>;
+        })}</ul>
         <p className="note">{t("+€5/person from Makadi Bay / Sahl Hasheesh / El Gouna")}</p>
         <Btn tone={p.theme === 'sand' ? 'navy' : 'sand'} block>Book This Package</Btn>
       </div>
     </article>
+  );
+}
+
+function PackagesCarousel() {
+  const rail = React.useRef(null);
+  const move = direction => {
+    if (!rail.current) return;
+    rail.current.scrollBy({ left: direction * rail.current.clientWidth * .9, behavior: 'smooth' });
+  };
+  return (
+    <div className="package-slider">
+      <div className="package-controls">
+        <button type="button" onClick={() => move(-1)} aria-label="Previous package"><ChevronLeft size={20} /></button>
+        <button type="button" onClick={() => move(1)} aria-label="Next package"><ChevronRight size={20} /></button>
+      </div>
+      <div className="pkg-grid" ref={rail}>{PACKAGES.map(p => <Package key={p.name} p={p} />)}</div>
+    </div>
   );
 }
 
@@ -107,12 +132,16 @@ export default function Home() {
             <div className="kicker"><span>{t("Hurghada Escapes")}</span><span>{t("Desert Safaris")}</span><span>{t("Fun History")}</span></div>
             <h1>{t("Spend your vacation")}<br />{t("with our activities")}</h1>
             <div className="thumbs">
-              {HERO_THUMBS.map(([label, photo, tone]) => (
-                <a className={'thumb ' + tone} href="#/trips" key={label}>
-                  <img src={P + photo} alt={label} />
-                  <b>{t(label)}</b>
-                </a>
-              ))}
+              <div className="thumb-track">
+                {[0, 1].map(group => <div className="thumb-group" key={group} aria-hidden={group === 1}>
+                  {HERO_THUMBS.map(([label, photo, tone, slug]) => (
+                    <a className={'thumb ' + tone} href={'#/trips/' + slug} key={label} tabIndex={group === 1 ? -1 : undefined}>
+                      <img src={P + photo} alt={group === 0 ? t(label) : ''} />
+                      <b>{t(label)}</b>
+                    </a>
+                  ))}
+                </div>)}
+              </div>
             </div>
           </div>
           <div className="art" aria-hidden="true">
@@ -132,7 +161,7 @@ export default function Home() {
         <div className="wrap">
           <Head eyebrow="Curated Bundles" title="Special Package Offers"
             copy="Hand-picked combinations for the best Hurghada experience — private, all-inclusive, zero hassle." />
-          <div className="pkg-grid">{PACKAGES.map(p => <Package key={p.name} p={p} />)}</div>
+          <PackagesCarousel />
         </div>
       </section>
 
