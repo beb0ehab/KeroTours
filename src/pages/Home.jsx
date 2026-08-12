@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Check, Waves, Mountain, Building2, Plane, Tag, Languages, BadgeCheck, MessageCircle, Car, BadgeEuro, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Check, Waves, Mountain, Building2, Plane, Tag, Languages, BadgeCheck, MessageCircle, Car, BadgeEuro, Star } from 'lucide-react';
 import { P, Btn, Head, Flag, TripCard, SPOKEN } from '../shared.jsx';
 import { useT } from '../i18n/index.jsx';
 import { TRIPS } from '../trips.js';
@@ -106,18 +106,13 @@ function Package({ p }) {
 }
 
 function PackagesCarousel() {
-  const rail = React.useRef(null);
-  const move = direction => {
-    if (!rail.current) return;
-    rail.current.scrollBy({ left: direction * rail.current.clientWidth * .9, behavior: 'smooth' });
-  };
   return (
     <div className="package-slider">
-      <div className="package-controls">
-        <button type="button" onClick={() => move(-1)} aria-label="Previous package"><ChevronLeft size={20} /></button>
-        <button type="button" onClick={() => move(1)} aria-label="Next package"><ChevronRight size={20} /></button>
+      <div className="pkg-auto-track">
+        {[0, 1].map(group => <div className="pkg-grid" key={group} aria-hidden={group === 1}>
+          {PACKAGES.map(p => <Package key={p.name} p={p} />)}
+        </div>)}
       </div>
-      <div className="pkg-grid" ref={rail}>{PACKAGES.map(p => <Package key={p.name} p={p} />)}</div>
     </div>
   );
 }

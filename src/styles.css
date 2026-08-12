@@ -130,7 +130,11 @@ section{padding:70px 0}
 .pkg.navy h3,.pkg.teal h3{color:#fff}
 .pkg.navy .price b,.pkg.teal .price b{color:var(--sand)}
 .pkg.navy .note,.pkg.teal .note{border-top:1px solid rgba(255,255,255,.16);color:#9fb7bc}
-.package-controls{display:none}
+.package-slider{overflow:hidden}
+.pkg-auto-track{display:flex;width:max-content;animation:packages-scroll 28s linear infinite;will-change:transform}
+.pkg-auto-track>.pkg-grid{width:1000px;flex:none;padding-right:22px}
+.package-slider:hover .pkg-auto-track,.package-slider:active .pkg-auto-track{animation-play-state:paused}
+@keyframes packages-scroll{to{transform:translateX(-50%)}}
 
 /* ---------- categories ---------- */
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
@@ -550,12 +554,9 @@ main{animation:page-in var(--motion) var(--ease) both}
   .hero .inner>div:first-child{position:relative;z-index:2}
   .cat-grid,.why-grid,.trip-grid,.day-grid,.review-grid,.story,.taxi,.sahara .inner{grid-template-columns:1fr}
   .package-slider{position:relative;margin:0 -18px}
-  .package-controls{display:flex;justify-content:flex-end;gap:10px;margin:0 18px 18px}
-  .package-controls button{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--navy);border:1px solid var(--line);box-shadow:var(--shadow)}
-  .package-controls button:active{transform:scale(.94)}
-  .pkg-grid{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:0 18px 22px;overscroll-behavior-inline:contain;scrollbar-width:none}
-  .pkg-grid::-webkit-scrollbar{display:none}
-  .pkg{flex:0 0 calc(100% - 30px);scroll-snap-align:center;scroll-snap-stop:always}
+  .pkg-auto-track>.pkg-grid{display:flex;width:calc(300vw - 72px);gap:18px;padding:0 18px 22px 0}
+  .pkg-auto-track>.pkg-grid:first-child{padding-left:18px}
+  .pkg{flex:0 0 calc(100vw - 48px)}
   .why-bento{grid-template-columns:1fr 1fr}.why-feature,.why-feature:nth-child(n){grid-column:span 1}
   .stats .inner{grid-template-columns:1fr 1fr;gap:22px}
   .score{grid-template-columns:1fr;gap:26px}
