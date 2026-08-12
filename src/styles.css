@@ -447,6 +447,78 @@ main{animation:page-in var(--motion) var(--ease) both}
   .info-grid article:hover,.speak-grid article:hover,.why-feature:hover,.value-card:hover{transform:none}
 }
 
+/* ---------- corner radii, straight from Figma ----------
+   The design uses a 14px card radius (12px on photos, 18px on buttons) with a
+   single oversized corner that rotates position from card to card. Values are
+   the frames' own rectangleCornerRadii, so this block is the authority — it
+   sits after the component styles on purpose. */
+:root{--r:14px;--r-img:12px;--r-btn:18px}
+
+/* Figma's buttons are 18px, not pills — including the one in the navbar. */
+.btn,header .btn,.tab{border-radius:var(--r-btn)}
+/* Genuinely pill-shaped in Figma (radius 33554400 = fully round). */
+.lang-pill,.wa,.ask,.review .chip,.pkg .tag,.trip .badge,.day .pill,
+.taxi .chips span,.member .langs{border-radius:999px}
+
+/* packages — 72 / 72 / 90 on the corner that rotates */
+.pkg{border-radius:var(--r) 72px var(--r) var(--r)}
+.pkg:nth-child(2){border-radius:var(--r) var(--r) 72px var(--r)}
+.pkg:nth-child(3){border-radius:var(--r) var(--r) 90px var(--r)}
+.pkg .photo,.pkg .photo img{border-radius:var(--r-img) 60px var(--r-img) var(--r-img)}
+.pkg:nth-child(n+2) .photo,.pkg:nth-child(n+2) .photo img{border-radius:var(--r-img)}
+
+/* categories — the big corner walks around the 2×2 grid */
+.cat{border-radius:var(--r) 72px var(--r) var(--r)}
+.cat:nth-child(2){border-radius:var(--r) var(--r) 72px var(--r)}
+.cat:nth-child(3){border-radius:72px var(--r) var(--r) var(--r)}
+.cat:nth-child(4){border-radius:var(--r) var(--r) var(--r) 72px}
+.cat img{border-radius:7px 49px 7px 31px}
+
+/* why / values — 56px, rotating every row */
+.why{border-radius:var(--r) 56px var(--r) var(--r)}
+.why:nth-child(2){border-radius:var(--r) var(--r) 56px var(--r)}
+.why:nth-child(3){border-radius:56px var(--r) var(--r) var(--r)}
+.why:nth-child(4){border-radius:var(--r) 56px var(--r) var(--r)}
+.why:nth-child(5){border-radius:var(--r) var(--r) 56px var(--r)}
+.why:nth-child(6){border-radius:56px var(--r) var(--r) var(--r)}
+
+/* trip cards — 72 / 72 / 90, photos 60 / 60 / 76 */
+.trip{border-radius:var(--r) 72px var(--r) var(--r)}
+.trip .pic,.trip .pic img{border-radius:var(--r-img) 60px var(--r-img) var(--r-img)}
+.trip:nth-child(2n){border-radius:var(--r) var(--r) 72px var(--r)}
+.trip:nth-child(2n) .pic,.trip:nth-child(2n) .pic img{border-radius:var(--r-img) var(--r-img) 60px var(--r-img)}
+.trip:nth-child(3){border-radius:var(--r) var(--r) 90px var(--r)}
+.trip:nth-child(3) .pic,.trip:nth-child(3) .pic img{border-radius:var(--r-img) var(--r-img) 76px var(--r-img)}
+
+/* day trips, taxi, story */
+.day{border-radius:var(--r) 72px var(--r) var(--r)}
+.day:nth-child(2){border-radius:var(--r) var(--r) 72px var(--r)}
+.taxi{border-radius:var(--r) 80px var(--r) var(--r)}
+.taxi .badge{border-radius:8px 32px 8px 8px}
+.story .pic>img{border-radius:var(--r) 72px var(--r) var(--r)}
+
+/* reviews — 48px, rotating every row */
+.review{border-radius:var(--r) 48px var(--r) var(--r)}
+.review:nth-child(2){border-radius:var(--r) var(--r) 48px var(--r)}
+.review:nth-child(3){border-radius:48px var(--r) var(--r) var(--r)}
+.review:nth-child(4){border-radius:var(--r) 48px var(--r) var(--r)}
+.review:nth-child(5){border-radius:var(--r) var(--r) 48px var(--r)}
+.review:nth-child(6){border-radius:48px var(--r) var(--r) var(--r)}
+
+/* remaining cards follow the same 14px base */
+.member,.channel,.info-grid article,.speak-grid article,.mini-stats div,
+.fastest,.custom-cta .star,.about-hero img{border-radius:var(--r) 56px var(--r) var(--r)}
+.member:nth-child(2),.channel:nth-child(2n),.info-grid article:nth-child(2n),
+.speak-grid article:nth-child(2n){border-radius:var(--r) var(--r) 56px var(--r)}
+
+/* Cards in a row match height — no short-next-to-tall. */
+.pkg-grid,.trip-grid,.cat-grid,.why-grid,.review-grid,.day-grid,
+.team-grid,.channel-grid,.info-grid,.speak-grid{align-items:stretch}
+.pkg,.trip{display:flex;flex-direction:column}
+.pkg .body,.trip .in{display:flex;flex-direction:column;flex:1}
+.pkg .body ul,.trip .in ul{flex:1}
+.pkg .note,.trip .note{margin-top:auto}
+
 /* ---------- inner-page banner ---------- */
 .banner{background:var(--navy);color:#cfe0e3;padding:60px 0 66px;text-align:center}
 .banner .eyebrow{display:flex;align-items:center;justify-content:center;gap:14px;font-family:var(--serif);font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:#8fa9ae}
@@ -560,12 +632,35 @@ main{animation:page-in var(--motion) var(--ease) both}
 
 /* ---------- responsive ---------- */
 @media (max-width:900px){
-  .hero .inner{grid-template-columns:1fr;align-items:start;padding:44px 18px 64px;min-height:590px}
-  .hero h1{font-size:34px}
-  .hero .art{position:absolute;width:min(88vw,560px);height:390px;right:-60px;top:190px;bottom:auto;z-index:0;opacity:.55;margin:0;mask-image:linear-gradient(90deg,transparent 0,#000 28%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 28%)}
-  .hero .art .lockup{left:24%;top:0;width:66%}
-  .hero .art .boat{right:-2%;top:54px;width:78%}
+  /* `section{padding:70px 0}` would double up with .inner's own padding here. */
+  .hero{padding:0}
+  /* minmax(0,1fr) — a plain 1fr lets the marquee blow the column out past the
+     viewport, which clipped the kicker and the thumbs. */
+  .hero .inner{grid-template-columns:minmax(0,1fr);align-items:start;padding:26px 18px 40px;min-height:0;gap:0}
+  .hero h1{font-size:34px;max-width:none}
+  /* Artwork leads the stack at full strength instead of ghosting behind the text. */
+  .hero .art{position:relative;order:-1;width:100%;height:196px;inset:auto;margin:0 0 22px;
+    opacity:1;z-index:1;overflow:hidden;
+    mask-image:linear-gradient(180deg,#000 70%,transparent);
+    -webkit-mask-image:linear-gradient(180deg,#000 70%,transparent)}
+  .hero .art .lockup{left:3%;top:6px;width:37%}
+  .hero .art .boat{right:-4%;top:0;width:56%}
   .hero .inner>div:first-child{position:relative;z-index:2}
+  .hero .thumbs{width:100%;height:160px;margin-top:26px;
+    mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent)}
+  /* the floating controls sit over content on a phone — keep them small */
+  .floats{right:14px;bottom:16px;gap:10px}
+  .lang-pill,.floats .ask{padding:9px 11px;font-size:0;gap:0}
+  .lang-pill svg:first-child{display:none}
+  .lang-pill .flag{width:22px;height:15px}
+  .floats .ask svg{width:20px;height:20px}
+  .wa{width:48px;height:48px}
+  /* four tabs never fit on one phone row — scroll them instead of wrapping */
+  .tabbar .wrap{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabbar .wrap::-webkit-scrollbar{display:none}
+  .tab{flex:none}
   .cat-grid,.why-grid,.trip-grid,.day-grid,.review-grid,.story,.taxi,.sahara .inner{grid-template-columns:1fr}
   .package-slider{position:relative;margin:0 -18px}
   .pkg-auto-track>.pkg-grid{display:flex;width:calc(300vw - 72px);gap:18px;padding:0 18px 22px 0}
@@ -598,14 +693,14 @@ main{animation:page-in var(--motion) var(--ease) both}
   .about-cta-grid{grid-template-columns:1fr;padding-top:58px;padding-bottom:58px}.about-cta-title{padding:0 0 34px}.about-cta h2{font-size:44px}.about-cta-panel{transform:none}.about-cta-panel>*{transform:none}
 }
 @media (max-width:560px){
-  .hero .inner{min-height:560px;padding:34px 18px 48px}
+  .hero .inner{min-height:0;padding:22px 18px 36px}
   .hero .kicker{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:0;font-size:8.5px;letter-spacing:.09em;line-height:1.45;text-align:center}
   .hero .kicker span{padding:0 7px;white-space:normal}
   .hero .kicker span+span{padding-left:7px}
-  .hero h1{font-size:38px;line-height:1.04;margin-top:24px;max-width:360px}
-  .hero .art{width:96vw;height:320px;right:-80px;top:170px;opacity:.32}
-  .hero .art .lockup{left:25%;top:4%;width:68%}
-  .hero .art .boat{right:-4%;top:58px;width:82%}
+  .hero h1{font-size:34px;line-height:1.06;margin-top:18px;max-width:none}
+  .hero .art{height:172px;margin-bottom:18px}
+  .hero .art .lockup{left:2%;top:0;width:39%}
+  .hero .art .boat{right:-2%;top:-6%;width:60%}
   .price-options .price-options-list article{grid-template-columns:32px 1fr auto;padding:10px;gap:9px}.option-number{width:30px;height:30px}.options-common ul{gap:5px}.options-common li{font-size:9.5px;padding:4px 7px}.option-price{font-size:16px}
   .why-bento{grid-template-columns:1fr}.why-feature{min-height:200px}
   .channel-grid{grid-template-columns:1fr}.channel.whatsapp{grid-column:auto}.channel{min-height:170px}
