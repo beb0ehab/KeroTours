@@ -117,8 +117,33 @@ function PackagesCarousel() {
   );
 }
 
+/** Holds the hero entrance until both artwork PNGs have decoded — otherwise the
+ *  animation plays against blank images and the visitor never sees it. */
+function useArtReady() {
+  const ref = React.useRef(null);
+  const [ready, setReady] = React.useState(false);
+  React.useEffect(() => {
+    const imgs = [...(ref.current?.querySelectorAll('img') || [])];
+    if (!imgs.length) return setReady(true);
+    let left = imgs.length, cancelled = false;
+    const tick = () => { if (!cancelled && --left <= 0) setReady(true); };
+    imgs.forEach(img => {
+      if (img.complete) tick();
+      else {
+        img.addEventListener('load', tick, { once: true });
+        img.addEventListener('error', tick, { once: true });
+      }
+    });
+    // never let a stalled image hide the artwork for good
+    const failsafe = setTimeout(() => { if (!cancelled) setReady(true); }, 2500);
+    return () => { cancelled = true; clearTimeout(failsafe); };
+  }, []);
+  return [ref, ready];
+}
+
 export default function Home() {
   const t = useT();
+  const [artRef, artReady] = useArtReady();
   return (
     <>
       <section className="hero">
@@ -139,7 +164,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="art" aria-hidden="true">
+          <div className={'art' + (artReady ? ' in' : '')} ref={artRef} aria-hidden="true">
             <img className="lockup" src={P + 'hero-logo.png'} alt="" />
             <img className="boat" src={P + 'hero-boat.png'} alt="" />
           </div>
