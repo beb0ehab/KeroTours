@@ -15,7 +15,7 @@ const HERO_THUMBS = [
   ['Sea', 'cat-sea.jpg', 'sand', 'sea'],
   ['Desert Adventures', 'cat-desert.jpg', 'navy', 'desert'],
   ['Entertainment', 'cat-entertain.jpg', 'sand', 'entertainment'],
-  ['Historical Trips', 'cat-history.jpg', 'navy', 'historical']
+  ['Historical Trips', 'cat-history.jpg', 'teal', 'historical']
 ];
 
 const PACKAGES = [
