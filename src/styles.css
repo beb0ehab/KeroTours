@@ -64,10 +64,18 @@ header .btn{justify-self:end;padding:11px 24px;border-radius:999px;box-shadow:0 
 .hero .thumbs{width:355px;max-width:100%;margin-top:110px;overflow:hidden;mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
 .thumb-track{display:flex;width:max-content;animation:hero-thumbs-scroll 16s linear infinite;will-change:transform}
 .thumb-group{display:flex;gap:16px;padding-right:16px}
-.thumb{width:120px;flex:none;border-radius:16px 16px 16px 26px;padding:8px 8px 10px;position:relative}
+.thumb{width:120px;flex:none;padding:8px 8px 12px;position:relative;overflow:hidden}
 .hero .thumbs:hover .thumb-track{animation-play-state:paused}
 @keyframes hero-thumbs-scroll{to{transform:translateX(-50%)}}
-.thumb img{border-radius:12px 12px 12px 22px;aspect-ratio:1/1;object-fit:cover;width:100%}
+.thumb img{aspect-ratio:1/1;object-fit:cover;width:100%;overflow:hidden}
+.thumb-group .thumb:nth-child(odd){border-radius:38px 6px 6px 6px}
+.thumb-group .thumb:nth-child(odd) img{border-radius:30px 4px 28px 4px}
+.thumb-group .thumb:nth-child(even){border-radius:6px 6px 38px 6px}
+.thumb-group .thumb:nth-child(even) img{border-radius:4px 28px 4px 30px}
+.thumb-group .thumb:nth-child(3){border-radius:6px 38px 6px 6px}
+.thumb-group .thumb:nth-child(3) img{border-radius:4px 30px 28px 4px}
+.thumb-group .thumb:nth-child(4){border-radius:6px 6px 38px 6px}
+.thumb-group .thumb:nth-child(4) img{border-radius:28px 4px 4px 30px}
 .thumb b{display:block;margin-top:8px;font-size:11.5px;font-weight:700}
 .thumb.sand{background:var(--sand)}
 .thumb.sand b{color:var(--navy)}
