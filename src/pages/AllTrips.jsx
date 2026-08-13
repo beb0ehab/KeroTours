@@ -14,45 +14,9 @@ const TABS = [
 export default function AllTrips({ tab: initial }) {
   const t = useT();
   const [tab, setTab] = useState(TRIPS[initial] ? initial : 'sea');
-  const tabsRef = useRef(null);
   const tripsRef = useRef(null);
   const list = TRIPS[tab];
   const label = TABS.find(t => t[0] === tab)[1];
-
-  useEffect(() => {
-    const slider = tabsRef.current;
-    if (!slider) return;
-    let frame;
-    let paused = false;
-    let resumeTimer;
-    let lastTime = performance.now();
-    const loopWidth = () => slider.scrollWidth / 3;
-    const pause = () => { paused = true; clearTimeout(resumeTimer); };
-    const release = () => {
-      clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(() => { paused = false; lastTime = performance.now(); }, 1200);
-    };
-    const tick = now => {
-      const width = loopWidth();
-      if (width && slider.scrollLeft < width * .45) slider.scrollLeft += width;
-      else if (width && slider.scrollLeft > width * 2.45) slider.scrollLeft -= width;
-      if (!paused && width) slider.scrollLeft += Math.min(now - lastTime, 32) * .03;
-      lastTime = now;
-      frame = requestAnimationFrame(tick);
-    };
-    slider.scrollLeft = loopWidth();
-    slider.addEventListener('pointerdown', pause);
-    slider.addEventListener('pointerup', release);
-    slider.addEventListener('pointercancel', release);
-    frame = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(frame);
-      clearTimeout(resumeTimer);
-      slider.removeEventListener('pointerdown', pause);
-      slider.removeEventListener('pointerup', release);
-      slider.removeEventListener('pointercancel', release);
-    };
-  }, []);
 
   useEffect(() => {
     const grid = tripsRef.current;
@@ -77,17 +41,15 @@ export default function AllTrips({ tab: initial }) {
         copy="Years of experiences — sea, desert, city & ancient Egyptian. Every single one bookable directly on WhatsApp." />
 
       <div className="tabbar">
-        <div className="tabbar-loop" ref={tabsRef}>
+        <div className="tabbar-loop">
           <div className="tab-track">
-            {[0, 1, 2].map(group => (
-              <div className="tab-group" key={group} aria-hidden={group !== 1}>
-                {TABS.map(([key, name, Icon]) => (
-                  <button key={key} tabIndex={group === 1 ? undefined : -1} className={'tab' + (key === tab ? ' on' : '')} onClick={() => setTab(key)}>
-                    <Icon size={16} />{t(name)}
-                  </button>
-                ))}
-              </div>
-            ))}
+            <div className="tab-group">
+              {TABS.map(([key, name, Icon]) => (
+                <button key={key} className={'tab' + (key === tab ? ' on' : '')} onClick={() => setTab(key)}>
+                  <Icon size={16} />{t(name)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

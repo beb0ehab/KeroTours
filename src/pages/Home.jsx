@@ -214,7 +214,7 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="inner">
-          <div>
+          <div className="hero-copy">
             <div className="kicker"><span>{t("Hurghada Escapes")}</span><span>{t("Desert Safaris")}</span><span>{t("Fun History")}</span></div>
             <h1>{t("Spend your vacation")}<br />{t("with our activities")}</h1>
             <div className="thumbs">

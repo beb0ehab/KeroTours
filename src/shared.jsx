@@ -160,15 +160,13 @@ export function Footer() {
   );
 }
 
-export function Floats({ ask }) {
-  const t = useT();
+export function Floats() {
   const { lang, setLang } = useLang();
   const [open, setOpen] = React.useState(false);
   const current = LANGUAGES.find(l => l[0] === lang) || LANGUAGES[0];
 
   return (
     <div className="floats">
-      {ask && <a className="ask" href={WA} target="_blank" rel="noreferrer"><MessageCircle size={15} /> {t('Ask a question')}</a>}
       <div className="lang-wrap">
         {open && (
           <div className="lang-menu">

@@ -85,23 +85,25 @@ header .btn{justify-self:end;font-family:var(--adamina);font-size:14px;font-weig
 .thumb.navy{background:#0f3d4c}
 .thumb.navy b,.thumb.teal b{color:#fff}
 .thumb.teal{background:#246e79}
-/* Hero artwork composition. The two PNGs share one coordinate system so their
-   relationship never changes when the viewport grows. */
-.hero .art{position:absolute;inset:0;z-index:1;pointer-events:none}
+/* Hero artwork composition. On desktop this is the 1010px reference artboard
+   pinned to the right edge. Both PNGs therefore move as one composition: their
+   sizes and overlap stay identical to the reference while the kayak continues
+   to meet the viewport edge on wide screens. */
+.hero .art{position:absolute;z-index:1;top:0;right:0;width:1010px;height:674px;pointer-events:none}
 .hero .art img{position:absolute;height:auto}
-.hero .art .lockup{left:calc(50% - 54px);top:34px;width:456px}
-.hero .art .boat{left:calc(50% - 48px);top:-8px;width:528px}
+.hero .art .lockup{left:460px;top:25px;width:438px}
+.hero .art .boat{left:507px;top:-5px;width:492px}
 
-@media (min-width:901px) and (max-height:760px){
-  .hero .inner{min-height:618px;padding-top:76px;padding-bottom:66px}
-  .hero .thumbs{margin-top:110px}
-}
-
-/* Desktop reference lock: positions are measured from the supplied 994px hero. */
+/* Desktop reference lock: positions are measured from the supplied 1010px capture. */
 @media (min-width:901px){
-  .hero .inner{height:618px;min-height:618px;padding:0}
-  .hero .inner>div:first-child{position:absolute;left:max(28px,calc((100% - 994px)/2 + 52px));top:70px;z-index:2}
-  .hero .thumbs{margin-top:103px;margin-left:20px}
+  .hero{background-size:max(100vw,1008px) 739px;background-position:center -65px}
+  .hero .inner{width:100%;max-width:none;height:674px;min-height:674px;padding:0}
+  .hero .hero-copy{position:absolute;left:clamp(53px,5vw,96px);top:63px;width:430px;z-index:2}
+  .hero .kicker{width:max-content;gap:10px;font-family:var(--serif);font-size:12.32386px;line-height:16.77277px;letter-spacing:.05em;font-weight:700;color:#81949d;transform:scaleX(.822);transform-origin:left top}
+  .hero .kicker span+span{padding-left:11px}
+  .hero h1{width:max-content;max-width:none;margin:13px 0 0;font-size:43.13351px;line-height:45.29018px;white-space:nowrap;transform:scaleX(.818);transform-origin:left top}
+  .hero .thumbs{position:absolute;left:6px;top:226px;width:350px;height:160px;margin:0}
+  .hero .thumb b{width:124px;white-space:nowrap;transform:scaleX(.82);transform-origin:center top}
 }
 
 /* ---------- stats ---------- */
@@ -733,7 +735,7 @@ main{animation:page-in var(--motion) var(--ease) both}
   .hero .art::before{content:none}
   .hero .art .lockup{left:61%;top:35%;width:30%;opacity:.72}
   .hero .art .boat{left:54%;right:auto;top:31%;width:40%}
-  .hero .inner>div:first-child{position:relative;z-index:2}
+  .hero .hero-copy{position:relative;z-index:2}
   /* Mobile scroll reveal: keep the assembling effect without expensive 3D
      perspective on large, image-heavy cards. */
   .why-section .why-bento,.trip-grid.reveal-ready{perspective:none}
@@ -867,8 +869,8 @@ main{animation:page-in var(--motion) var(--ease) both}
 
 /* Wider phones / small tablets have enough room for a fuller artwork lockup. */
 @media (min-width:561px) and (max-width:900px){
-  .hero .art .lockup{left:63%;top:23%;width:36%;opacity:.76}
-  .hero .art .boat{left:57%;top:18%;width:52%}
+  .hero .art .lockup{left:calc(63% - 3px);top:23%;width:calc(39% + 6px);opacity:.76}
+  .hero .art .boat{left:57%;top:18%;width:49%}
 }
 
 @media (max-width:560px){
@@ -881,8 +883,8 @@ main{animation:page-in var(--motion) var(--ease) both}
   header .btn svg{width:11px;height:11px;flex:none}
 
   /* Fill the right-hand mobile composition without letting it cover the copy. */
-  .hero .art .lockup{left:59%;top:30%;width:35%;opacity:.74}
-  .hero .art .boat{left:54%;top:27%;width:47%}
+  .hero .art .lockup{left:calc(59% - 3px);top:30%;width:calc(40% + 6px);opacity:.74}
+  .hero .art .boat{left:56%;top:27%;width:44%}
 
   /* Hero: preserve the supplied reference composition on small phones. */
   .hero .inner{padding:34px 18px 38px}

@@ -50,7 +50,7 @@ function App() {
         {/* keyed so the page-in transition replays on every route change */}
         <main key={hash}>{page}</main>
         <Footer />
-        <Floats ask={route === '#/trips'} />
+        <Floats />
       </div>
     </LangProvider>
   );
