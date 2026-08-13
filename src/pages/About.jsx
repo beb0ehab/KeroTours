@@ -27,9 +27,16 @@ const REVIEWS = [
 
 export default function About() {
   const t = useT();
+  const heroRef = useRef(null);
   const storyRef = useRef(null);
 
   useEffect(() => {
+    const hero = heroRef.current;
+    if (hero) {
+      hero.classList.add('about-hero-reveal-ready');
+      requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add('about-hero-revealed')));
+    }
+
     const story = storyRef.current;
     if (!story) return;
 
@@ -47,7 +54,7 @@ export default function About() {
   return (
     <>
       <section className="about-hero">
-        <div className="wrap">
+        <div className="wrap" ref={heroRef}>
           <div>
             <div className="eyebrow">{t('About Kero Tours')}</div>
             <h1>{t('We Make Egypt')}<br /><em>{t('Unforgettable.')}</em></h1>
