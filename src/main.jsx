@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Header, Footer, Floats } from './shared.jsx';
 import { LangProvider } from './i18n/index.jsx';
@@ -12,9 +12,14 @@ import './styles.css';
 function useHash() {
   const [hash, setHash] = useState(() => window.location.hash || '#/');
   useEffect(() => {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const onChange = () => {
+      const root = document.documentElement;
+      const previousBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       setHash(window.location.hash || '#/');
-      window.scrollTo(0, 0);
+      requestAnimationFrame(() => { root.style.scrollBehavior = previousBehavior; });
     };
     window.addEventListener('hashchange', onChange);
     return () => window.removeEventListener('hashchange', onChange);
@@ -25,6 +30,10 @@ function useHash() {
 function App() {
   const hash = useHash();
   const [, section, sub] = hash.replace(/^#/, '').split('/');
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [hash]);
 
   let page, route;
   switch (section) {

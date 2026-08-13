@@ -3,6 +3,7 @@ import { ArrowRight, Check, Waves, Mountain, Building2, Plane, Tag, Languages, B
 import { P, Btn, Head, Flag, TripCard, SPOKEN } from '../shared.jsx';
 import { useT } from '../i18n/index.jsx';
 import { TRIPS } from '../trips.js';
+import ScaleWrap from '../ScaleWrap.jsx';
 
 const STATS = [
   ['10,000+', 'Happy Travellers'],
@@ -106,10 +107,59 @@ function Package({ p }) {
 }
 
 function PackagesCarousel() {
+  const sliderRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    let frame;
+    let paused = false;
+    let resumeTimer;
+    let lastTime = performance.now();
+
+    const loopWidth = () => slider.scrollWidth / 3;
+    const centreTrack = () => {
+      const width = loopWidth();
+      if (width) slider.scrollLeft = width;
+    };
+
+    const resumeLater = () => {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => { paused = false; lastTime = performance.now(); }, 1400);
+    };
+    const pause = () => { paused = true; clearTimeout(resumeTimer); };
+    const release = () => resumeLater();
+    const tick = now => {
+      const width = loopWidth();
+      if (width && slider.scrollLeft < width * .45) slider.scrollLeft += width;
+      else if (width && slider.scrollLeft > width * 2.45) slider.scrollLeft -= width;
+      if (!paused && width) {
+        slider.scrollLeft += Math.min(now - lastTime, 32) * 0.035;
+      }
+      lastTime = now;
+      frame = requestAnimationFrame(tick);
+    };
+
+    slider.addEventListener('pointerdown', pause);
+    slider.addEventListener('pointerup', release);
+    slider.addEventListener('pointercancel', release);
+    centreTrack();
+    frame = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(resumeTimer);
+      slider.removeEventListener('pointerdown', pause);
+      slider.removeEventListener('pointerup', release);
+      slider.removeEventListener('pointercancel', release);
+    };
+  }, []);
+
   return (
-    <div className="package-slider">
+    <div className="package-slider" ref={sliderRef} aria-label="Package offers carousel">
       <div className="pkg-auto-track">
-        {[0, 1].map(group => <div className="pkg-grid" key={group} aria-hidden={group === 1}>
+        {[0, 1, 2].map(group => <div className="pkg-grid" key={group} aria-hidden={group !== 1}>
           {PACKAGES.map(p => <Package key={p.name} p={p} />)}
         </div>)}
       </div>
@@ -144,6 +194,22 @@ function useArtReady() {
 export default function Home() {
   const t = useT();
   const [artRef, artReady] = useArtReady();
+  const whyRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const section = whyRef.current;
+    if (!section) return;
+    section.classList.add('reveal-ready');
+    const cards = section.querySelectorAll('.why-feature');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle('is-revealed', entry.isIntersecting);
+      });
+    }, { threshold: .18, rootMargin: '-5% 0px -8% 0px' });
+    cards.forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <section className="hero">
@@ -172,8 +238,23 @@ export default function Home() {
       </section>
 
       <div className="stats">
-        <div className="inner">
+        {/* Desktop grid */}
+        <div className="inner stats-grid">
           {STATS.map(([n, l]) => <div key={l}><b>{n}</b><span>{t(l)}</span></div>)}
+        </div>
+        {/* Mobile ticker */}
+        <div className="stats-ticker" aria-hidden="true">
+          <div className="stats-track">
+            {[0, 1].map(g => (
+              <div className="stats-group" key={g}>
+                {STATS.map(([n, l]) => (
+                  <div className="stats-item" key={l}>
+                    <b>{n}</b><span>{t(l)}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -204,13 +285,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="tint why-section">
+      <section className="tint why-section" ref={whyRef}>
         <div className="wrap">
           <Head eyebrow="Why Kero Tours" title="Why Travellers Choose Us"
             copy="We've hosted guests from 40+ countries. Here's why they keep coming back." />
           <div className="why-grid why-bento">
             {WHY.map(([Icon, title, copy], index) => (
-              <article className="why why-feature" key={title}>
+              <article className="why why-feature" key={title} style={{ '--reveal-order': index }}>
                 <div className="why-feature-top"><span className="why-feature-icon"><Icon size={22} /></span><span>0{index + 1}</span></div>
                 <div className="why-feature-copy"><h3>{t(title)}</h3><p>{t(copy)}</p></div>
               </article>
