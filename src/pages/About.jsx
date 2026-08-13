@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Waves, Handshake, Languages, ShieldCheck, Compass, MessageCircle } from 'lucide-react';
 import { P, Btn, Head, Flag } from '../shared.jsx';
 import { useT } from '../i18n/index.jsx';
@@ -27,6 +27,23 @@ const REVIEWS = [
 
 export default function About() {
   const t = useT();
+  const storyRef = useRef(null);
+
+  useEffect(() => {
+    const story = storyRef.current;
+    if (!story) return;
+
+    story.classList.add('story-reveal-ready');
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      story.classList.add('story-revealed');
+      observer.disconnect();
+    }, { threshold: .18, rootMargin: '0px 0px -6% 0px' });
+
+    observer.observe(story);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <section className="about-hero">
@@ -42,7 +59,7 @@ export default function About() {
       </section>
 
       <section className="tint">
-        <div className="wrap story-block">
+        <div className="wrap story-block" ref={storyRef}>
           <div className="pics">
             <img className="a" src={P + 'about-story1.jpg'} alt="Guests on a Kero Tours trip" loading="lazy" />
             <img className="b" src={P + 'about-story2.jpg'} alt="A Bedouin dinner" loading="lazy" />
