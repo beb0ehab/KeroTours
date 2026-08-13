@@ -68,7 +68,7 @@ header .btn{justify-self:end;font-family:var(--adamina);font-size:14px;font-weig
 .thumb-track{display:flex;width:max-content;animation:hero-thumbs-scroll 16s linear infinite;will-change:transform}
 .thumb-group{display:flex;gap:18.4857902527px;padding-right:18.4857902527px}
 .thumb{width:122.0062103271px;height:159.5939941406px;flex:none;padding:6.9321713448px;position:relative;display:flex;flex-direction:column;align-items:center;gap:6.9321713448px;overflow:visible}
-.hero .thumbs:hover .thumb-track{animation-play-state:paused}
+  .hero .thumbs:hover .thumb-track{animation-play-state:paused}
 @keyframes hero-thumbs-scroll{to{transform:translateX(-50%)}}
 .thumb img{display:block;width:108.4499664307px;height:106.6013870239px;max-width:none;flex:none;object-fit:cover;object-position:center;overflow:hidden}
 .thumb-group .thumb:nth-child(4n+1){border-radius:8.318605423px 49.2954406738px 8.318605423px 0}
@@ -719,6 +719,24 @@ main{animation:page-in var(--motion) var(--ease) both}
   .hero .art .lockup{left:3%;top:-10%;width:88%}
   .hero .art .boat{right:-14%;top:-31%;width:114%}
   .hero .inner>div:first-child{position:relative;z-index:2}
+  /* Mobile scroll reveal: keep the assembling effect without expensive 3D
+     perspective on large, image-heavy cards. */
+  .why-section .why-bento,.trip-grid.reveal-ready{perspective:none}
+  .why-section.reveal-ready .why-feature,
+  .why-section.reveal-ready .why-feature:nth-child(even),
+  .why-section.reveal-ready .why-feature:nth-child(3n){
+    opacity:0;transform:translate3d(0,28px,0) scale(.965);transition:opacity .28s linear,transform .42s cubic-bezier(.2,.75,.25,1);transition-delay:0s;backface-visibility:hidden;will-change:transform,opacity
+  }
+  .why-section.reveal-ready .why-feature.is-revealed{
+    opacity:1;transform:translate3d(0,0,0) scale(1);will-change:auto
+  }
+  .trip-grid.reveal-ready .trip,
+  .trip-grid.reveal-ready .trip:nth-child(even){
+    opacity:0;transform:translate3d(0,32px,0) scale(.97);transition:opacity .28s linear,transform .44s cubic-bezier(.2,.75,.25,1);transition-delay:0s;backface-visibility:hidden;will-change:transform,opacity
+  }
+  .trip-grid.reveal-ready .trip.is-revealed{
+    opacity:1;transform:translate3d(0,0,0) scale(1);will-change:auto
+  }
   /* Thumb marquee — scaled to 65% of desktop */
   .hero .thumbs{
     width:235px!important;max-width:60vw!important;min-width:0;margin-right:auto;height:112px;margin-top:24px;
